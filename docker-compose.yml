@@ -1,0 +1,27 @@
+name: docker-test
+
+services:
+  server:
+    image: ${COMPOSE_PROJECT_NAME}/server:${TAG:-latest}
+    container_name: server
+    environment:
+      NODE_ENV: production
+    restart: always
+    build:
+      context: ./apps/server
+      dockerfile: ./Dockerfile
+      secrets:
+        - TURBO_TEAM
+        - TURBO_TOKEN
+      args:
+        CI: ${CI:-false}
+        DO_NOT_TRACK: ${DO_NOT_TRACK:-1}
+      tags:
+        - '${COMPOSE_PROJECT_NAME}/server:latest'
+
+secrets:
+  TURBO_TEAM:
+    environment: TURBO_TEAM
+
+  TURBO_TOKEN:
+    environment: TURBO_TOKEN
